@@ -17,6 +17,10 @@ impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
         }
     }
 
+    pub fn run(&self, s: S) -> (S, A) {
+        (self.run)(s)
+    }
+
     pub fn map<B: 'static, G>(self, f: G) -> State<S, B>
         where G: Fn(A) -> B + 'static
     {

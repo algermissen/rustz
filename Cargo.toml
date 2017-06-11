@@ -10,7 +10,7 @@ homepage = "https://github.com/algermissen/rustz"
 description = """
 A library for functional programming in Rust.
 """
-categories = ["functional"]
+categories = ["data-structures"]
 
 [dependencies]
 

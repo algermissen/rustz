@@ -17,6 +17,10 @@ impl<R: 'static + Clone, A: 'static> Reader<R, A> {
         }
     }
 
+    pub fn run(&self, r: &R) -> A {
+        (self.run)(r)
+    }
+
     pub fn map<B: 'static, G>(self, f: G) -> Reader<R, B>
         where G: Fn(A) -> B + 'static
     {
