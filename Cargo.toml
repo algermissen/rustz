@@ -2,7 +2,15 @@
 name = "rustz"
 version = "0.1.0"
 authors = ["Algermissen Jan <algermissen@acm.org>"]
+license = "MIT/Apache-2.0"
+readme = "README.md"
+keywords = ["functional", "reader", "state"]
+repository = "https://github.com/algermissen/rustz"
+homepage = "https://github.com/algermissen/rustz"
+description = """
+A library for functional programming in Rust.
+"""
+categories = ["functional"]
 
 [dependencies]
-
 
