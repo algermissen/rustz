@@ -1,0 +1,8 @@
+[package]
+name = "rustz"
+version = "0.1.0"
+authors = ["Algermissen Jan <algermissen@acm.org>"]
+
+[dependencies]
+
+
