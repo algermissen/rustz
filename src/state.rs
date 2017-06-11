@@ -99,7 +99,7 @@ mod tests {
 
         let account = Account { balance: 0 };
 
-        let x = contribute(10).flat_map(move |i: i32| deduct(5));
+        let x = contribute(10).flat_map(move |_: i32| deduct(5));
 
         //let q = |x: i32| State::new(move |a: Account| (Account { balance: 111 + x }, 500));
 

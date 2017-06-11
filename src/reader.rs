@@ -6,7 +6,7 @@ pub struct Reader<R, A> {
     content_type: PhantomData<A>,
 }
 
-impl<R: 'static + Clone, A: 'static> Reader<R, A> {
+impl<R: 'static, A: 'static> Reader<R, A> {
     pub fn new<F>(f: F) -> Reader<R, A>
         where F: Fn(&R) -> A + 'static
     {
@@ -48,7 +48,7 @@ mod tests {
 
     use super::Reader;
 
-    #[derive(Debug,Clone)]
+    #[derive(Debug)]
     struct Connection {
         x: i32,
     }

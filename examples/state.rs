@@ -16,9 +16,9 @@ fn contribute(d: i32) -> State<Account, i32> {
 }
 
 fn main() {
-    let add10ThenSubtract5WithLastFee = contribute(10).flat_map(move |i: i32| deduct(5));
+    let add_10_the_subtract_5 = contribute(10).flat_map(move |_: i32| deduct(5));
     let account = Account { balance: 0 };
-    let (account2, fee) = add10ThenSubtract5WithLastFee.run(account);
+    let (account2, fee) = add_10_the_subtract_5.run(account);
     println!("New balance: {:?} , last transaction fee {:?}",
              account2.balance,
              fee);
