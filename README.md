@@ -18,7 +18,7 @@ possible without negating Rust's design principles and performance
 goals the plan is definitely to move this to production grade
 functional library.
 
-# Like-Minded Creates
+# Like-Minded Crates
 
 - https://github.com/KitFreddura/Kinder (interesting macro based HKT approach)
 - https://github.com/mcoffin/rust-effect-monad (Contains trampoline impl.)
