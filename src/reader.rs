@@ -1,14 +1,14 @@
 use std::marker::PhantomData;
 
-pub struct Reader<R, A> {
-    run: Box<Fn(&R) -> A>,
+pub struct Reader<'reader, R, A> {
+    run: Box<Fn(&R) -> A + 'reader>,
     state_type: PhantomData<R>,
     content_type: PhantomData<A>,
 }
 
-impl<R: 'static, A: 'static> Reader<R, A> {
-    pub fn new<F>(f: F) -> Reader<R, A>
-        where F: Fn(&R) -> A + 'static
+impl<'reader, R: 'reader, A: 'reader> Reader<'reader, R, A> {
+    pub fn new<F>(f: F) -> Reader<'reader, R, A>
+        where F: Fn(&R) -> A + 'reader
     {
         Reader {
             run: Box::new(f),
@@ -21,8 +21,8 @@ impl<R: 'static, A: 'static> Reader<R, A> {
         (self.run)(r)
     }
 
-    pub fn map<B: 'static, G>(self, f: G) -> Reader<R, B>
-        where G: Fn(A) -> B + 'static
+    pub fn map<B: 'reader, G>(self, f: G) -> Reader<'reader, R, B>
+        where G: Fn(A) -> B + 'reader
     {
         let h = move |s: &R| {
             let a = (self.run)(s);
@@ -31,8 +31,8 @@ impl<R: 'static, A: 'static> Reader<R, A> {
         Reader::new(h)
     }
 
-    pub fn flat_map<B: 'static, G>(self, f: G) -> Reader<R, B>
-        where G: Fn(A) -> Reader<R, B> + 'static
+    pub fn flat_map<B: 'reader, G>(self, f: G) -> Reader<'reader, R, B>
+        where G: Fn(A) -> Reader<'reader, R, B> + 'reader
     {
         let h = move |s: &R| {
             let a = (self.run)(s);
@@ -53,10 +53,10 @@ mod tests {
         x: i32,
     }
 
-    fn get_user(id: i32) -> Reader<Connection, i32> {
+    fn get_user(id: i32) -> Reader<'static, Connection, i32> {
         Reader::new(move |c: &Connection| id + c.x)
     }
-    fn get_other(id: i32) -> Reader<Connection, i32> {
+    fn get_other(id: i32) -> Reader<'static, Connection, i32> {
         Reader::new(move |c: &Connection| id + c.x)
     }
 
