@@ -18,6 +18,18 @@ possible without negating Rust's design principles and performance
 goals the plan is definitely to move this to production grade
 functional library.
 
+You can track my plans and progress here.
+
+| Data Structure   | Status                                                       |
+|------------------|--------------------------------------------------------------|
+| Applicative      | Early experiments                                            |
+| ValidationNel    | Early experiments                                            |
+| State Monad      | Initial attempt, working but needs refactoring on lifetimes. |
+| Reader Monad     | Working version, needs cleanup and refactoring               |
+| Writer Monad     | Planned                                                      |
+| ReaderT          | Planned for Option, Tokio futures, other type classes usually needed with Web service development. |
+| ...              | Please open issues for anything you'd like to see here       |
+
 # Like-Minded Crates
 
 - https://github.com/KitFreddura/Kinder (interesting macro based HKT approach)
