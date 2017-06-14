@@ -45,6 +45,8 @@ You can track my plans and progress here.
 - https://github.com/m4rw3r/chomp (Parsing)
 - https://github.com/freebroccolo/tailrec.rs
 - https://github.com/asajeffrey/parsell (Parsing)
+- https://github.com/mgattozzi/curryrs
+
 
 # Functional Programming in Rust Discussions
 

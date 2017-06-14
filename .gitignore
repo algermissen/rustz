@@ -11,3 +11,6 @@ Cargo.lock
 
 */*.swp
 rusty-tags.vi
+
+
+main.rs

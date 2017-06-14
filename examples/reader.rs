@@ -10,10 +10,6 @@ struct User {
     some_val: i32,
 }
 
-struct Project {
-    id: i32,
-}
-
 #[derive(Debug,Clone)]
 struct KV {
     //state: Box<i32>,
@@ -69,6 +65,10 @@ fn get_friends<'a>(user_id: i32) -> Reader<'a, Env, Vec<User>> {
                   })
 }
 
+fn get_friends_of_user<'a>(user_id: i32) -> Reader<'a, Env, Vec<User>> {
+    get_user(user_id).flat_map(|user| get_friends(user.id))
+}
+
 
 fn main() {
     //let kv = KV { state: Box::new(1) };
@@ -79,7 +79,8 @@ fn main() {
     let env = Env { kv: kv, gdb: gdb };
 
     let user_reader = get_user(10);
-    let friends_reader = get_user(10).flat_map(|user| get_friends(user.id));
+    //let friends_reader = get_friends(10).flat_map(|user| get_friends(user.id));
+    let friends_reader = get_friends_of_user(10);
 
     let user = user_reader.run(&env);
     let friends = friends_reader.run(&env);

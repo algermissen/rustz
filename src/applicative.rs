@@ -1,3 +1,28 @@
+//
+//pub trait Applicative<X, A> {
+//    fn point(a: A) -> X<A>;
+//}
+//
+//#[cfg(test)]
+//mod tests {
+//
+//    use super::Applicative;
+//    use std::option::*;
+//
+//    impl<A> Applicative<Option, A> for Option<A> {
+//        fn point(a: A) -> Option<A> {
+//            Option::Some(a)
+//        }
+//    }
+//
+//    #[test]
+//    fn it_works() {
+//
+//        assert!(true);
+//    }
+//}
+//
+
 //trait Applicative {
 //
 //    // Runs a function f in the success of the Validation a or passing the failure

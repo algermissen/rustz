@@ -1,7 +1,10 @@
 // foo
 
 pub mod semigroup;
-pub use semigroup::XX;
+pub use semigroup::Semigroup;
+
+pub mod validation;
+pub use validation::Validation;
 
 pub mod state;
 pub use state::State;
@@ -16,6 +19,6 @@ mod tests {
     #[test]
     fn it2_works() {
 
-        assert!(XX == 10);
+        assert!(10 == 10);
     }
 }
