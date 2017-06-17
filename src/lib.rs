@@ -1,5 +1,3 @@
-// foo
-
 pub mod semigroup;
 pub use semigroup::Semigroup;
 
@@ -12,6 +10,11 @@ pub use state::State;
 pub mod reader;
 pub use reader::Reader;
 
+pub mod lense;
+pub use lense::Lense;
+pub use lense::L;
+pub use lense::Compose;
+
 
 #[cfg(test)]
 mod tests {
@@ -22,3 +25,4 @@ mod tests {
         assert!(10 == 10);
     }
 }
+

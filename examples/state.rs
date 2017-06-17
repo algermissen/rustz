@@ -8,10 +8,10 @@ struct Account {
 }
 
 
-fn deduct(d: i32) -> State<Account, i32> {
+fn deduct(d: i32) -> State<'static,Account, i32> {
     State::new(move |a: Account| (Account { balance: a.balance - d }, 1))
 }
-fn contribute(d: i32) -> State<Account, i32> {
+fn contribute(d: i32) -> State<'static,Account, i32> {
     State::new(move |a: Account| (Account { balance: a.balance + d }, 1))
 }
 

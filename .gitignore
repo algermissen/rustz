@@ -11,6 +11,8 @@ Cargo.lock
 
 */*.swp
 rusty-tags.vi
+examples/t1.rs
+tags
 
 
 main.rs

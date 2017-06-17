@@ -1,14 +1,14 @@
 use std::marker::PhantomData;
 
-pub struct State<S, A> {
-    run: Box<Fn(S) -> (S, A)>,
+pub struct State<'state,S, A> {
+    run: Box<Fn(S) -> (S, A) + 'state>,
     state_type: PhantomData<S>,
     content_type: PhantomData<A>,
 }
 
-impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
-    pub fn new<F>(f: F) -> State<S, A>
-        where F: Fn(S) -> (S, A) + 'static
+impl<'state,S: 'state + Clone + Copy, A: 'state> State<'state,S, A> {
+    pub fn new<F>(f: F) -> State<'state,S, A>
+        where F: Fn(S) -> (S, A) + 'state
     {
         State {
             run: Box::new(f),
@@ -21,8 +21,8 @@ impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
         (self.run)(s)
     }
 
-    pub fn map<B: 'static, G>(self, f: G) -> State<S, B>
-        where G: Fn(A) -> B + 'static
+    pub fn map<B: 'state, G>(self, f: G) -> State<'state,S, B>
+        where G: Fn(A) -> B + 'state
     {
         let h = move |s: S| {
             let (s1, a) = (self.run)(s);
@@ -31,8 +31,8 @@ impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
         State::new(h)
     }
 
-    pub fn flat_map<B: 'static, G>(self, f: G) -> State<S, B>
-        where G: Fn(A) -> State<S, B> + 'static
+    pub fn flat_map<B: 'state, G>(self, f: G) -> State<'state,S, B>
+        where G: Fn(A) -> State<'state,S, B> + 'state
     {
         let h = move |s: S| {
             let (s1, a) = (self.run)(s);
@@ -41,7 +41,7 @@ impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
         State::new(h)
     }
 
-    pub fn get(self) -> State<S, S> {
+    pub fn get(self) -> State<'state,S, S> {
         let f = move |s: S| {
             let s2 = s.clone();
             (s, s2)
@@ -49,8 +49,8 @@ impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
         State::new(f)
     }
 
-    pub fn gets<F>(self, f: F) -> State<S, A>
-        where F: Fn(S) -> A + 'static
+    pub fn gets<F>(self, f: F) -> State<'state,S, A>
+        where F: Fn(S) -> A + 'state
     {
         let g = move |s: S| {
             let s2 = s.clone();
@@ -59,14 +59,14 @@ impl<S: 'static + Clone + Copy, A: 'static> State<S, A> {
         State::new(g)
     }
 
-    pub fn put(self, s: S) -> State<S, ()> {
+    pub fn put(self, s: S) -> State<'state,S, ()> {
         let s2 = s.clone();
         let f = move |_| (s2, ());
         State::new(f)
     }
 
-    pub fn modify<F>(self, f: F) -> State<S, ()>
-        where F: Fn(S) -> S + 'static
+    pub fn modify<F>(self, f: F) -> State<'state,S, ()>
+        where F: Fn(S) -> S + 'state
     {
         let g = move |s| (f(s), ());
         State::new(g)
@@ -85,10 +85,10 @@ mod tests {
         balance: i32,
     }
 
-    fn deduct(d: i32) -> State<Account, i32> {
+    fn deduct(d: i32) -> State<'static,Account, i32> {
         State::new(move |a: Account| (Account { balance: a.balance - d }, 0))
     }
-    fn contribute(d: i32) -> State<Account, i32> {
+    fn contribute(d: i32) -> State<'static,Account, i32> {
         State::new(move |a: Account| (Account { balance: a.balance + d }, 0))
     }
     // https://youtu.be/9uRXjxy7JDE?t=10m39s
