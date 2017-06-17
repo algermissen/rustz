@@ -76,12 +76,19 @@ where
     }
 }
 
-// TBD: need an idea how to do this...
-//pub fn compose<'composite,OUTER,INNER,VALUE,L1,L2>(outer:&L1,inner:&L2) -> Compose<'composite,OUTER,INNER,VALUE,L1,L2>
-//where L1:'composite+Lense<Object=OUTER,Value=INNER>,
-//      L2:'composite+Lense<Object=INNER,Value=VALUE> {
-//    Compose{outer:outer,inner:inner}
-//      }
+pub fn compose<'composite, OUTER, INNER, VALUE, L1, L2>(
+    outer: &'composite L1,
+    inner: &'composite L2,
+) -> Compose<'composite, OUTER, INNER, VALUE, L1, L2>
+where
+    L1: 'composite + Lense<Object = OUTER, Value = INNER>,
+    L2: 'composite + Lense<Object = INNER, Value = VALUE>,
+{
+    Compose {
+        outer: outer,
+        inner: inner,
+    }
+}
 
 
 mod tests {
@@ -117,10 +124,7 @@ mod tests {
             Point { x: *x, y: point.y }
         });
 
-        let turtle_point_x = Compose {
-            outer: &turtle_position,
-            inner: &point_x,
-        };
+        let turtle_point_x = compose(&turtle_position, &point_x);
 
         let t1 = Turtle {
             id: 1,
