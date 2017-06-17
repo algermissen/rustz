@@ -22,6 +22,7 @@ You can track my plans and progress here.
 
 | Data Structure   | Status                                                       |
 |------------------|--------------------------------------------------------------|
+| Lense            | First working version                                        |
 | Applicative      | Early experiments                                            |
 | ValidationNel    | Early experiments                                            |
 | State Monad      | Initial attempt, working but needs refactoring on lifetimes. |
