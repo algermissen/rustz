@@ -31,7 +31,8 @@ pub fn success_nel<E: Clone, A>(item: A) -> ValidationNel<E, A> {
 
 impl<E: Semigroup + Copy, A: Copy> Validation<E, A> {
     pub fn ap<B, F>(&self, x: Validation<E, F>) -> Validation<E, B>
-        where F: FnOnce(A) -> B
+    where
+        F: FnOnce(A) -> B,
     {
         match (self, x) {
             (&Validation::Success(_), Validation::Failure(e2)) => Validation::Failure::<E, B>(e2),
@@ -49,7 +50,8 @@ impl<E: Semigroup + Copy, A: Copy> Validation<E, A> {
     }
 
     pub fn map<B, F>(&self, f: F) -> Validation<E, B>
-        where F: FnOnce(A) -> B
+    where
+        F: FnOnce(A) -> B,
     {
         match self {
             &Validation::Success(ref a) => Validation::Success(f(*a)),
@@ -65,15 +67,15 @@ impl<E: Semigroup + Copy, A: Copy> Validation<E, A> {
     }
 }
 
-pub fn apply2<E: Semigroup + Copy, A: Copy, B: Copy, R, F: FnOnce(A, B) -> R>
-    (a: Validation<E, A>,
-     b: Validation<E, B>,
-     f: F)
-     -> Validation<E, R> {
+pub fn apply2<E: Semigroup + Copy, A: Copy, B: Copy, R, F: FnOnce(A, B) -> R>(
+    a: Validation<E, A>,
+    b: Validation<E, B>,
+    f: F,
+) -> Validation<E, R> {
     let fv = b.map(move |b2: B| {
-                       let p = move |u: A| f(u, b2);
-                       p
-                   });
+        let p = move |u: A| f(u, b2);
+        p
+    });
     a.ap(fv)
 }
 

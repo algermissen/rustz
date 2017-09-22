@@ -29,6 +29,7 @@ You can track my plans and progress here.
 | Reader Monad     | Working version, needs cleanup and refactoring               |
 | Writer Monad     | Planned                                                      |
 | ReaderT          | Planned for Option, Tokio futures, other type classes usually needed with Web service development. |
+| Free Monad       | Tried this, but not sure if possible in Rust in a useful way. I also do not really grok Free - giving this up for now. Help welcome.. |
 | ...              | Please open issues for anything you'd like to see here       |
 
 # Like-Minded Crates
