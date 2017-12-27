@@ -4,8 +4,10 @@ pub use semigroup::Semigroup;
 pub mod validation;
 pub use validation::Validation;
 
-pub mod state;
-pub use state::State;
+//pub mod state;
+//pub use state::State;
+pub mod stat;
+pub use stat::State;
 
 pub mod reader;
 pub use reader::Reader;
@@ -25,4 +27,3 @@ mod tests {
         assert!(10 == 10);
     }
 }
-

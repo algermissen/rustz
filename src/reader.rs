@@ -8,7 +8,8 @@ pub struct Reader<'reader, R, A> {
 
 impl<'reader, R: 'reader, A: 'reader> Reader<'reader, R, A> {
     pub fn new<F>(f: F) -> Reader<'reader, R, A>
-        where F: Fn(&R) -> A + 'reader
+    where
+        F: Fn(&R) -> A + 'reader,
     {
         Reader {
             run: Box::new(f),
@@ -22,7 +23,8 @@ impl<'reader, R: 'reader, A: 'reader> Reader<'reader, R, A> {
     }
 
     pub fn map<B: 'reader, G>(self, f: G) -> Reader<'reader, R, B>
-        where G: Fn(A) -> B + 'reader
+    where
+        G: Fn(A) -> B + 'reader,
     {
         let h = move |s: &R| {
             let a = (self.run)(s);
@@ -32,7 +34,8 @@ impl<'reader, R: 'reader, A: 'reader> Reader<'reader, R, A> {
     }
 
     pub fn flat_map<B: 'reader, G>(self, f: G) -> Reader<'reader, R, B>
-        where G: Fn(A) -> Reader<'reader, R, B> + 'reader
+    where
+        G: Fn(A) -> Reader<'reader, R, B> + 'reader,
     {
         let h = move |s: &R| {
             let a = (self.run)(s);
