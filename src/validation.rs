@@ -55,6 +55,22 @@ impl<E: Clone + Semigroup, A: Clone> Validation<E, A> {
             Validation::Failure(_) => fallback,
         }
     }
+
+    pub fn unwrap(self) -> A {
+        match self {
+            Validation::Success(a) => a,
+            Validation::Failure(_) => panic!("Validation is a failure"),
+        }
+    }
+    pub fn is_success(&self) -> bool {
+        match self {
+            &Validation::Success(_) => true,
+            &Validation::Failure(_) => false,
+        }
+    }
+    pub fn is_failure(&self) -> bool {
+        !self.is_success()
+    }
 }
 
 fn collect_err1<A, E>(a: Validation<E, A>, e: E) -> E
@@ -201,16 +217,25 @@ mod tests {
     use super::success;
     use super::failure;
 
+    // Let's use i32 as error counter error type
     impl Semigroup for i32 {
         fn mappend(&self, b: i32) -> i32 {
             self + b
         }
     }
 
-    fn add(s: i32, t: i32) -> i32 {
-        s + t
+
+    // A function that takes two parameters
+    fn add2(a: i32, b: i32) -> i32 {
+        a + b
+    }
+    // A function that takes three parameters
+    fn add3(a: i32, b: i32, c: i32) -> i32 {
+        a + b + c
     }
 
+    // A function that works in the context of validation and returns an error if
+    // if devision by 0 would occur.
     fn div(s: i32, t: i32) -> ValidationNel<String, i32> {
         match t {
             0 => failure_nel::<String, i32>("Cannot devide by 0".to_owned()),
@@ -218,45 +243,30 @@ mod tests {
         }
     }
 
-
     #[test]
     fn it_works() {
         let a = success::<i32, i32>(1);
-        let b = failure::<i32, i32>(99);
-        let c = success::<i32, i32>(1);
+        let b = success::<i32, i32>(2);
+        let r = apply2(a, b, add2);
+        assert!(r.unwrap() == 3);
 
-        //let r = apply2(a, c, add);
-        //let z = r.get_or_else(99999);
-        //println!("R {:?}", z);
+        let a = success::<i32, i32>(1);
+        let b = success::<i32, i32>(2);
+        let c = success::<i32, i32>(3);
+        let r = apply3(a, b, c, add3);
+        assert!(r.unwrap() == 6);
 
-        //let a = success_nel::<String, i32>(10);
-        //let b = success_nel::<String, i32>(20);
-        //let r = apply2(a, b, add);
-        //match r {
-        //    Validation::Success(v) => println!("OK {}", v),
-        //    Validation::Failure(e) => println!("FAIL"),
-        //}
-        //let aa = success_nel::<String, i32>(10);
-        //let bb = success_nel::<String, i32>(2);
-        //let rr = apply2(aa, bb, div);
-        //match rr {
-        //    Validation::Success(v) => println!("OK {:?}", v),
-        //    Validation::Failure(e) => println!("FAIL "),
-        //}
+        let a = success::<i32, i32>(1);
+        let b = success::<i32, i32>(2);
+        let e = failure::<i32, i32>(3);
+        let r = apply3(a, b, e, add3);
+        assert!(r.is_failure());
 
-        let aa = success_nel::<String, i32>(10);
-        let bb = success_nel::<String, i32>(0);
-        let rr = div(10, 1);
-        let rr2 = div(20, 2);
-        let r = apply2(rr, rr2, add);
-        println!("RR: {:?}", r);
-        match r {
-            Validation::Success(v) => println!("OK {:?}", v),
-            Validation::Failure(e) => println!("FAIL "),
-        }
+        let r = div(10, 0);
+        assert!(r.is_failure());
 
-
-        assert!(true);
+        let r = div(10, 2);
+        assert!(r.unwrap() == 5);
     }
 
 }
