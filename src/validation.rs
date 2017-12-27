@@ -71,6 +71,13 @@ impl<E: Clone + Semigroup, A: Clone> Validation<E, A> {
     pub fn is_failure(&self) -> bool {
         !self.is_success()
     }
+
+    pub fn get_err(self) -> E {
+        match self {
+            Validation::Failure(e) => e,
+            Validation::Success(_) => panic!("Validation is a success"),
+        }
+    }
 }
 
 fn collect_err1<A, E>(a: Validation<E, A>, e: E) -> E
@@ -267,6 +274,17 @@ mod tests {
 
         let r = div(10, 2);
         assert!(r.unwrap() == 5);
+
+        let r = apply3(div(10, 0), div(10, 1), div(0, 0), add3);
+        assert!(r.get_err().len() == 2);
+
+        let r = apply3(
+            failure::<i32, i32>(1),
+            failure::<i32, i32>(1),
+            failure::<i32, i32>(1),
+            add3,
+        );
+        assert!(r.get_err() == 3);
     }
 
 }

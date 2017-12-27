@@ -1,6 +1,6 @@
 [package]
 name = "rustz"
-version = "0.1.2"
+version = "0.1.2.1"
 authors = ["Algermissen Jan <algermissen@acm.org>"]
 license = "MIT/Apache-2.0"
 readme = "README.md"
