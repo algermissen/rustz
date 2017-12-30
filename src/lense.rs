@@ -1,6 +1,5 @@
 use std::marker::PhantomData;
 
-
 pub trait Lense {
     type Object;
     type Value;
@@ -92,9 +91,6 @@ where
 
 
 mod tests {
-    use super::Lense;
-    use super::L;
-    use super::Compose;
     use super::*;
 
     #[test]

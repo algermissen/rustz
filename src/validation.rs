@@ -1,4 +1,3 @@
-use std::result;
 use std::collections::LinkedList;
 use semigroup::Semigroup;
 
@@ -119,6 +118,26 @@ where
     }
 }
 
+fn collect_err4<A, B, C, D, E>(
+    a: Validation<E, A>,
+    b: Validation<E, B>,
+    c: Validation<E, C>,
+    d: Validation<E, D>,
+    e: E,
+) -> E
+where
+    A: Clone,
+    B: Clone,
+    C: Clone,
+    D: Clone,
+    E: Clone + Semigroup,
+{
+    match d {
+        Validation::Failure(x) => x.mappend(collect_err3(a, b, c, e)),
+        Validation::Success(_) => collect_err3(a, b, c, e),
+    }
+}
+
 // Runs a function f in the success of the Validation a or passing the failure
 // of a through.
 pub fn apply2<A, B, R, F, E>(a: Validation<E, A>, b: Validation<E, B>, f: F) -> Validation<E, R>
@@ -192,6 +211,37 @@ where
         Validation::Success(d2) => {
             let p = |a2: A, b2: B, c2: C| f(a2, b2, c2, d2);
             apply3(a, b, c, p)
+        }
+    }
+}
+// Runs a function f in the success of the Validations a,b,c,g and e or passing any
+// failures through, accumulating errors along the way. This means that evaluation
+// is not short-circuited, but that all failures are collected using the supplied
+// semigroup error type.
+pub fn apply5<A, B, C, D, G, R, F, E>(
+    a: Validation<E, A>,
+    b: Validation<E, B>,
+    c: Validation<E, C>,
+    d: Validation<E, D>,
+    g: Validation<E, G>,
+    f: F,
+) -> Validation<E, R>
+where
+    A: Clone,
+    B: Clone,
+    C: Clone,
+    D: Clone,
+    G: Clone,
+    R: Clone,
+    E: Clone + Semigroup,
+    F: FnOnce(A, B, C, D, G) -> R,
+{
+
+    match g {
+        Validation::Failure(e) => Validation::Failure(collect_err4(a, b, c, d, e)),
+        Validation::Success(g2) => {
+            let p = |a2: A, b2: B, c2: C, d2: D| f(a2, b2, c2, d2, g2);
+            apply4(a, b, c, d, p)
         }
     }
 }
